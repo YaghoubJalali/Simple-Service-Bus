@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,7 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Sample.UserManagement.Host\Sample.UserManagement.Host.csproj" />
+    <ProjectReference Include="..\..\src\Sample.UserManagement\Sample.UserManagement.Service\Sample.UserManagement.Service.csproj" />
+    <ProjectReference Include="..\..\src\Simple.ServiceBus\Sample.ServiceBus\Sample.ServiceBus.csproj" />
   </ItemGroup>
 
 </Project>

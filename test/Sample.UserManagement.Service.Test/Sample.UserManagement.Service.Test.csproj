@@ -21,8 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Sample.UserManagement\Sample.UserManagement.Service\Sample.UserManagement.Service.csproj" />
-    <ProjectReference Include="..\Sample.ServiceBus\Sample.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\src\Sample.UserManagement\Sample.UserManagement.Service\Sample.UserManagement.Service.csproj" />
   </ItemGroup>
 
 </Project>
