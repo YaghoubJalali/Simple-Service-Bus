@@ -70,10 +70,7 @@ public class CommandBus : ICommandBus
 
         public async Task Dispatch<T>(T command) where T : class, ICommandMessage
         {
-            if (command is null)
-            {
-                throw new ArgumentNullException(nameof(command));
-            }
+            ...
 
             var handler = _provier.GetService<ICommandHandler<T>>();
             if (handler == null)
@@ -132,13 +129,7 @@ public class RegisterUserCommandMessage: CommandMessage
 
         public async Task HandelAsync(ModifyUserCommandMessage modifyUser)
         {
-            var user = new UserDbModel
-            {
-                Id = modifyUser.Id,
-                FirstName = modifyUser.FirstName,
-                LastName = modifyUser.LastName,
-                Email = modifyUser.Email
-            };
+            ...
             await _userRepository.UpdateAsync(user);
         }
     }
