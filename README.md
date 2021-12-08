@@ -148,11 +148,6 @@ public class UserService : IUserService
 
         public async Task<Guid> RegisterUser(RegisterUser addUser)
         {
-            if (addUser is null)
-            {
-                throw new ArgumentNullException(nameof(addUser));
-            }
-
             var addUserCommand = new RegisterUserCommandMessage(addUser.FirstName, addUser.LastName, addUser.Email);
             await _commandBus.Dispatch(addUserCommand);
             return addUserCommand.Id;
