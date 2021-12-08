@@ -1,5 +1,13 @@
 ## Simple Service-Bus
-Impelement service bus to handle commands.
+Implement full test service bus to handle commands.
+
+
+
+## Give a Star! ⭐
+
+If you like or are using this project to learn or using it in your own project, please give it a star. 
+
+Thank you.
 
 
 
