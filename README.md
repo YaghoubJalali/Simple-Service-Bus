@@ -1,11 +1,21 @@
 ## Simple Service-Bus
-Simple bus to handle commands.
+Impelement service bus to handle commands.
 
 
 
 ## Purpose
 
 The intention of this project is to implement concepts of different kinds of `service bus`.
+
+
+
+## Used Framework and libraries
+
+- **.Net Core 3.1**
+- **EntityFrameworkCore.InMemory 5.0.12**
+- **xunit 2.4.1**
+- **Moq 4.16.1**
+- **AutoMapper 8.1.1**
 
 
 
@@ -29,6 +39,36 @@ The intention of this project is to implement concepts of different kinds of `se
         : ICommandHandler where TCommand : class, ICommandMessage
     {
         Task HandelAsync(TCommand command);
+    }
+```
+
+
+
+#### [`CommandBus:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/CommandBus.cs) The Only Implementation of `CommandBus` 
+
+```
+public class CommandBus : ICommandBus 
+    {
+        private readonly IServicesProvider _provier;
+
+        public CommandBus(IServicesProvider provider)
+        {
+            _provier = provider ?? throw new ArgumentNullException($"{nameof(IServicesProvider)} is null!");
+        }
+
+        public async Task Dispatch<T>(T command) where T : class, ICommandMessage
+        {
+            if (command is null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
+
+            var handler = _provier.GetService<ICommandHandler<T>>();
+            if (handler == null)
+                throw new ArgumentNullException(nameof(ICommandHandler<T>));
+
+            await handler.HandelAsync(command);
+        }
     }
 ```
 
@@ -116,36 +156,6 @@ public class UserService : IUserService
             var addUserCommand = new RegisterUserCommandMessage(addUser.FirstName, addUser.LastName, addUser.Email);
             await _commandBus.Dispatch(addUserCommand);
             return addUserCommand.Id;
-        }
-    }
-```
-
-
-
-#### [`CommandBus:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/CommandBus.cs) The Only Implementation of `CommandBus` 
-
-```
-public class CommandBus : ICommandBus 
-    {
-        private readonly IServicesProvider _provier;
-
-        public CommandBus(IServicesProvider provider)
-        {
-            _provier = provider ?? throw new ArgumentNullException($"{nameof(IServicesProvider)} is null!");
-        }
-
-        public async Task Dispatch<T>(T command) where T : class, ICommandMessage
-        {
-            if (command is null)
-            {
-                throw new ArgumentNullException(nameof(command));
-            }
-
-            var handler = _provier.GetService<ICommandHandler<T>>();
-            if (handler == null)
-                throw new ArgumentNullException(nameof(ICommandHandler<T>));
-
-            await handler.HandelAsync(command);
         }
     }
 ```
