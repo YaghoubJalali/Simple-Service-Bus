@@ -5,7 +5,7 @@ Implement full tested service bus to handle commands.
 
 ## Give a Star! ⭐
 
-If you like or use this project to learn or in your own project, please give it a star. 
+If you like this project or are using it to learn or for your own coding, please give it a star. 
 
 Thank you.
 
