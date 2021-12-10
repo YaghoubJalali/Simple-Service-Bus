@@ -37,7 +37,7 @@ The intention of this project is to implement concepts of different kinds of `se
 
 **Test**
 
-- [`Test`](https://github.com/YaghoubJalali/Simple-Service-Bus/tree/main/test) - Implement testing all part using xUnit.
+- [`Test`](https://github.com/YaghoubJalali/Simple-Service-Bus/tree/main/test) - Implement testing for all part using xUnit.
 
   
 
