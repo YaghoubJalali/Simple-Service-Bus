@@ -57,7 +57,6 @@ The intention of this project is to implement concepts of different kinds of `se
 
 
 #### [`CommandBus:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/CommandBus.cs) Implementation of `CommandBus` 
-Look at test [here](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/test/Sample.ServiceBus.Test/Handler/CommandBusTest.cs).
 
 ```
 public class CommandBus : ICommandBus 
@@ -86,8 +85,6 @@ public class CommandBus : ICommandBus
 
 #### [`RegisterUserCommandMessage:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Command/UserCommand/RegisterUserCommandMessage.cs) Implement User Message to be handled 
 
-Look at test [here](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/test/Sample.UserManagement.Service.Test/Command/UserCommand/RegisterUserCommandMessageTest.cs).
-
 ```
 public class RegisterUserCommandMessage: CommandMessage
     {
@@ -107,8 +104,6 @@ public class RegisterUserCommandMessage: CommandMessage
 #### 
 
 #### [`UserCommandHandler:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Command/UserCommand/Handler/UserCommandHandler.cs) Implement handler to handle user command
-
-Look at test [here](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/test/Sample.UserManagement.Service.Test/Command/UserCommand/Handler/UserCommandHandlerTest.cs).
 
 ```
  public class UserCommandHandler : ICommandHandler<RegisterUserCommandMessage>
@@ -143,8 +138,6 @@ Look at test [here](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/mai
 
 
 #### [`UserService:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Service/UserService.cs) - Dispatch `commandMessage` in user service
-
-Look at test [Here](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/test/Sample.UserManagement.Service.Test/Service/UserServiceTest.cs).
 
 ```
 public class UserService : IUserService
