@@ -10,8 +10,6 @@ namespace Sample.ServiceBus.Contract
     {
         Task Publish<TEvent>(TEvent eventToPublish) where TEvent : IEvent;
 
-        //UserCreatedEventHandler : IEventHandler<UserCreatedEvent>
-
         void Subscribe<T,U>() 
             where T : IEventHandler<U>
             where U : IEvent;
