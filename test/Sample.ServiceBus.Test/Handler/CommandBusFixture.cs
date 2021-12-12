@@ -17,6 +17,8 @@ namespace Sample.ServiceBus.Test.Handler
         public ICommandBus CommandBus { get; private set; }
         public Mock<UserCommandHandler> MockUserCommandHandler { get; private set; }
         public Mock<IUserRepository>  MockUserRepository { get; private set; }
+        public Mock<IEventAggregator> MockEventAggregator { get; private set; }
+
 
         public IServicesProvider ServiceProvider { get; private set; }
 
@@ -28,7 +30,9 @@ namespace Sample.ServiceBus.Test.Handler
         private void InitiateServices()
         {
             MockUserRepository = new Mock<IUserRepository>();
-            MockUserCommandHandler = new Mock<UserCommandHandler>(MockUserRepository.Object);
+            MockEventAggregator = new Mock<IEventAggregator>();
+            MockUserCommandHandler = new Mock<UserCommandHandler>
+                (MockUserRepository.Object, MockEventAggregator.Object);
 
             var mockServiceProvider = new Mock<IServiceProvider>();
             ServiceProvider = new ServicesProvider(mockServiceProvider.Object);

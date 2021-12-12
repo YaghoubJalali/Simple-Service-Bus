@@ -12,6 +12,7 @@ using Sample.UserManagement.Service.Repository;
 using Sample.UserManagement.Service.Service;
 using Sample.UserManagement.Service.Service.Contract;
 using Sample.UserManagement.Service.Repository.Contract;
+using Sample.UserManagement.Service.Event;
 
 namespace Sample.Framework.Common.Test
 {
@@ -33,6 +34,9 @@ namespace Sample.Framework.Common.Test
         [InlineData(typeof(ICommandBus))]
         [InlineData(typeof(IUserRepository))]
         [InlineData(typeof(ICommandHandler<RegisterUserCommandMessage>))]
+        [InlineData(typeof(IEventHandler<UserCreatedEvent>))]
+        [InlineData(typeof(IEventAggregator))]
+
         public void When_RequestForService_Then_RelatedInstanceOfServiceShouldBeReturn(Type interfaceType)
         {
             MethodInfo method = _servicesProvider.GetType().GetMethod("GetService");

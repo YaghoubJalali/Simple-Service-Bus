@@ -3,6 +3,7 @@ using Sample.ServiceBus.Contract;
 using Sample.ServiceBus.Handler;
 using Sample.UserManagement.Service.Command.UserCommand;
 using Sample.UserManagement.Service.DatabaseModel;
+using Sample.UserManagement.Service.Event;
 using System;
 using System.Threading.Tasks;
 using Xunit;
@@ -52,6 +53,9 @@ namespace Sample.ServiceBus.Test.Handler
             await _commandBus.Dispatch(command);
             _servicesProviderFixture.MockUserRepository.Verify(m =>
                         m.AddAsync(It.IsAny<UserDbModel>())
+                        , Moq.Times.Once);
+            _servicesProviderFixture.MockEventAggregator.Verify(m =>
+                        m.Publish<UserCreatedEvent>(It.IsAny<UserCreatedEvent>())
                         , Moq.Times.Once);
         }
 

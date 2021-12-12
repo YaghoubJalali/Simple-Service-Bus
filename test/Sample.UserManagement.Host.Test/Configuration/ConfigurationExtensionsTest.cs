@@ -5,6 +5,7 @@ using Sample.ServiceBus.Contract;
 using Sample.UserManagement.Configuration;
 using Sample.UserManagement.Helpers;
 using Sample.UserManagement.Service.Command.UserCommand;
+using Sample.UserManagement.Service.Event.Handler;
 using Sample.UserManagement.Service.Repository;
 using Sample.UserManagement.Service.Repository.Contract;
 using Sample.UserManagement.Service.Service;
@@ -43,6 +44,7 @@ namespace Sample.UserManagement.Host.Test.Configuration
 
         [Theory]
         [InlineData(typeof(ICommandHandler<>),typeof(UserCommandHandler))]
+        [InlineData(typeof(IEventHandler<>),typeof(UserCreatedEventHandler))]
         public void When_RegisteredGenericeTypesInServiceCollection_Then_AllChildShouldBeExistInCollection
             (Type interfaceType,Type onOfImplementedClassType)
         {

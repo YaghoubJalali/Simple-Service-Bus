@@ -1,5 +1,9 @@
-﻿using Sample.UserManagement.Service.Command.UserCommand;
+﻿using Moq;
+using Sample.ServiceBus.Contract;
+using Sample.UserManagement.Service.Command.UserCommand;
 using Sample.UserManagement.Service.DatabaseModel;
+using Sample.UserManagement.Service.Event;
+using Sample.UserManagement.Service.Repository.Contract;
 using Sample.UserManagement.Service.Test.Repository;
 using System;
 using System.Collections.Generic;
@@ -18,10 +22,19 @@ namespace Sample.UserManagement.Service.Test.Command.UserCommand.Handler
             _userCommandHandlerFixture = userCommandHandler;
         }
 
-        [Fact]
-        public void When_TryToInstantiateUserCommandHandlerWithNullParameter_Then_ArgumentNullExceptionShouldBeThrown()
+        public static IEnumerable<Object[]> InvalidConstructorParameterValue =>
+            new List<object[]>
+            {
+                new object[] { null ,null},
+                new object[] { null, new Mock<IEventAggregator>().Object },
+                new object[] { new Mock<IUserRepository>().Object,null },
+            };
+        [Theory]
+        [MemberData(nameof(InvalidConstructorParameterValue))]
+        public void When_TryToInstantiateUserCommandHandlerWithNullParameter_Then_ArgumentNullExceptionShouldBeThrown
+            (IUserRepository userRepository,IEventAggregator eventAggregator)
         {
-            Assert.Throws<ArgumentNullException>((Action)(() => new UserCommandHandler(null)));
+            Assert.Throws<ArgumentNullException>((Action)(() => new UserCommandHandler(userRepository,eventAggregator)));
         }
 
         [Fact]
@@ -47,8 +60,10 @@ namespace Sample.UserManagement.Service.Test.Command.UserCommand.Handler
 
             await _userCommandHandlerFixture.UserCommandHandler.HandelAsync(registerUser);
             _userCommandHandlerFixture.MockUserRepository.Verify(m => m.AddAsync(user), Moq.Times.Once);
-        }
 
+            _userCommandHandlerFixture.MockEventAggregator.Verify(
+                m => m.Publish(It.Is<UserCreatedEvent>(o=>o.Id.Equals(user.Id))), Moq.Times.Once);
+        }
 
         [Fact]
         public async Task When_CallHandleAsyncMethodWithModifyUserCommandMessageNullParamter_Then_ArgumentNullExceptionShouldBeThrown()
