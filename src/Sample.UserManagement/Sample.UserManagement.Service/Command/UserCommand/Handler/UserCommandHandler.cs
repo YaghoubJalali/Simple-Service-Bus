@@ -1,5 +1,6 @@
 ﻿using Sample.ServiceBus.Contract;
 using Sample.UserManagement.Service.DatabaseModel;
+using Sample.UserManagement.Service.Event;
 using Sample.UserManagement.Service.Repository;
 using Sample.UserManagement.Service.Repository.Contract;
 using System;
@@ -13,9 +14,11 @@ namespace Sample.UserManagement.Service.Command.UserCommand
                                 ,ICommandHandler<ModifyUserCommandMessage>
     {
         private readonly IUserRepository _userRepository;
-        public UserCommandHandler(IUserRepository userRepository)
+        private readonly IEventAggregator _eventAggregator;
+        public UserCommandHandler(IUserRepository userRepository, IEventAggregator eventAggregator)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
         }
 
         public async Task HandelAsync(RegisterUserCommandMessage addUser)
@@ -32,7 +35,9 @@ namespace Sample.UserManagement.Service.Command.UserCommand
                 LastName = addUser.LastName,
                 Email = addUser.Email
             };
+
             await _userRepository.AddAsync(user);
+            await _eventAggregator.Publish(new UserCreatedEvent(user.Id));
         }
 
         public async Task HandelAsync(ModifyUserCommandMessage modifyUser)

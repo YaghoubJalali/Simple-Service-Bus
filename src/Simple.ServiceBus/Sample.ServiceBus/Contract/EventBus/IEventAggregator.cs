@@ -1,12 +1,20 @@
-﻿using System;
+﻿using Sample.ServiceBus.Contract.EventBus;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Sample.ServiceBus.Contract
 {
-    interface IEventAggregator
+    public interface IEventAggregator
     {
-        void Publish<T>(T eventToPublish) where T : class,IEvent;
-        void Subscribe<T>(IEventHandler<T> handler) where T :class,IEvent;
+        Task Publish<TEvent>(TEvent eventToPublish) where TEvent : IEvent;
+
+        //UserCreatedEventHandler : IEventHandler<UserCreatedEvent>
+
+        void Subscribe<T,U>() 
+            where T : IEventHandler<U>
+            where U : IEvent;
+
     }
 }

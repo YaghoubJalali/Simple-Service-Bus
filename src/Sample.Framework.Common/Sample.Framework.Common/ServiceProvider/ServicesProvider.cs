@@ -11,11 +11,7 @@ namespace Sample.Framework.Common.ServiceProvider
 
         public ServicesProvider(IServiceProvider provider)
         {
-            if (provider == null)
-            {
-                throw new ArgumentNullException(nameof(provider));
-            }
-            _provier = provider;
+            _provier = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
         public T GetService<T>()

@@ -1,13 +1,15 @@
-﻿using System;
+﻿using Sample.ServiceBus.Contract.EventBus;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Sample.ServiceBus.Contract
 {
     //public interface IEventHandler { }
-    public interface IEventHandler<in TEvent> 
-                  where TEvent:class, IEvent
+    public interface IEventHandler<TEvent> 
+                  where TEvent: IEvent
     {
-        void Handle(TEvent eventToHandle);
+        Task Handle(TEvent eventToHandle);
     }
 }

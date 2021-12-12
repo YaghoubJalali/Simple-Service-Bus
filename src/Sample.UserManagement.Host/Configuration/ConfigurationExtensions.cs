@@ -15,6 +15,8 @@ using Sample.Framework.Common.ServiceProvider;
 using Sample.UserManagement.Helpers;
 using Sample.UserManagement.Service.Service.Contract;
 using Sample.UserManagement.Service.Repository.Contract;
+using Sample.UserManagement.Service.Event.Handler;
+using Sample.UserManagement.Service.Event;
 
 namespace Sample.UserManagement.Configuration
 {
@@ -33,8 +35,10 @@ namespace Sample.UserManagement.Configuration
             services.AddScoped<IEmailService, EmailService>();
 
             RegisterAllGenericeType(services, typeof(ICommandHandler<>), typeof(UserCommandHandler), ServiceLifetime.Scoped);
+            RegisterAllGenericeType(services, typeof(IEventHandler<>), typeof(UserCreatedEventHandler), ServiceLifetime.Scoped);
 
             services.AddSingleton<ICommandBus, CommandBus>();
+            services.AddSingleton<IEventAggregator, EventAggregator>();
 
             services.AddSingleton(services);
 
@@ -42,6 +46,11 @@ namespace Sample.UserManagement.Configuration
                 srv => {
                     return new ServicesProvider(services.BuildServiceProvider());
                 });
+
+            //
+            var provider = services.BuildServiceProvider();
+            var eAggregator = (IEventAggregator)provider.GetService(typeof(IEventAggregator));
+            SubscribeEventHandler(eAggregator);
 
             return services;
         }
@@ -74,6 +83,11 @@ namespace Sample.UserManagement.Configuration
             var types = type.GetInterfaces().Where(o => o.IsGenericType && o.GetGenericTypeDefinition() == interfaceType).ToList();
             return types;
         }
+
+        private static void SubscribeEventHandler(IEventAggregator eventAggregator)
+        {
+            eventAggregator.Subscribe<UserCreatedEventHandler, UserCreatedEvent>();
+        } 
 
     }
 }
