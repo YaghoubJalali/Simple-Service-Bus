@@ -35,7 +35,7 @@ The intention of this project is to implement concepts of different kinds of `se
 
 ## 
 
-## Implementation of Command Bus:
+## Implementation of Command Bus
 
 #### [`ICommandHandler:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/ICommandHandler.cs) Implementation of `ICommandHandler` Interfaces
 
@@ -131,7 +131,7 @@ public class RegisterUserCommandMessage: CommandMessage
 
 
 
-#### [`UserService:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Service/UserService.cs) - Dispatch `commandMessage` in user service
+#### [`UserService:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Service/UserService.cs)  Dispatch `commandMessage` in user service
 
 ```
 public class UserService : IUserService
@@ -154,7 +154,7 @@ public class UserService : IUserService
 
 
 
-## Implementation of Event Bus:
+## Implementation of Event Bus
 
 #### [`IEventAggregator:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/EventBus/IEventAggregator.cs) Implementation of `IEventAggregator` Interfaces
 
