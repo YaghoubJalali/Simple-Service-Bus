@@ -1,5 +1,13 @@
 ## Simple Service-Bus
-Impelement service bus to handle commands.
+Implement full tested service bus to handle commands.
+
+
+
+## Give a Star! ⭐
+
+If you like or are using this project to learn or using it in your own project, please give it a star. 
+
+Thank you.
 
 
 
@@ -27,7 +35,11 @@ The intention of this project is to implement concepts of different kinds of `se
 - [`ICommandHandler<>`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/ICommandHandler.cs) - The Interface must be implemented to handle each `Command`. Provides `handleAsync(CommandMessageImplementation)` Method.
 - [`CommandBus`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/CommandBus.cs) - Dispatch related `CommandHandler` for each `Command`.
 
-## 
+**Test**
+
+- [`Test`](https://github.com/YaghoubJalali/Simple-Service-Bus/tree/main/test) - Implement testing all part using xUnit.
+
+  
 
 ## Example Implementation of Command Bus:
 
@@ -44,7 +56,7 @@ The intention of this project is to implement concepts of different kinds of `se
 
 
 
-#### [`CommandBus:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/CommandBus.cs) The Only Implementation of `CommandBus` 
+#### [`CommandBus:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/CommandBus.cs) Implementation of `CommandBus` 
 
 ```
 public class CommandBus : ICommandBus 
@@ -58,10 +70,7 @@ public class CommandBus : ICommandBus
 
         public async Task Dispatch<T>(T command) where T : class, ICommandMessage
         {
-            if (command is null)
-            {
-                throw new ArgumentNullException(nameof(command));
-            }
+            ...
 
             var handler = _provier.GetService<ICommandHandler<T>>();
             if (handler == null)
@@ -120,13 +129,7 @@ public class RegisterUserCommandMessage: CommandMessage
 
         public async Task HandelAsync(ModifyUserCommandMessage modifyUser)
         {
-            var user = new UserDbModel
-            {
-                Id = modifyUser.Id,
-                FirstName = modifyUser.FirstName,
-                LastName = modifyUser.LastName,
-                Email = modifyUser.Email
-            };
+            ...
             await _userRepository.UpdateAsync(user);
         }
     }
