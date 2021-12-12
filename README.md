@@ -1,6 +1,5 @@
 ## Simple Service-Bus
-Implement full tested service bus to handle commands.
-
+Impelement service bus to handle commands.
 
 
 ## Give a Star! ⭐
@@ -8,7 +7,6 @@ Implement full tested service bus to handle commands.
 If you like or are using this project to learn or using it in your own project, please give it a star. 
 
 Thank you.
-
 
 
 ## Purpose
@@ -35,15 +33,11 @@ The intention of this project is to implement concepts of different kinds of `se
 - [`ICommandHandler<>`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/ICommandHandler.cs) - The Interface must be implemented to handle each `Command`. Provides `handleAsync(CommandMessageImplementation)` Method.
 - [`CommandBus`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/CommandBus.cs) - Dispatch related `CommandHandler` for each `Command`.
 
-**Test**
+## 
 
-- [`Test`](https://github.com/YaghoubJalali/Simple-Service-Bus/tree/main/test) - Implement testing all part using xUnit.
+## Implementation of Command Bus:
 
-  
-
-## Example Implementation of Command Bus:
-
-#### [`ICommandHandler:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/ICommandHandler.cs) The only Implementation of `ICommandHandler` Interfaces
+#### [`ICommandHandler:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/ICommandHandler.cs) Implementation of `ICommandHandler` Interfaces
 
 ```
  public interface ICommandHandler { }
@@ -70,7 +64,7 @@ public class CommandBus : ICommandBus
 
         public async Task Dispatch<T>(T command) where T : class, ICommandMessage
         {
-            ...
+           //Validate command
 
             var handler = _provier.GetService<ICommandHandler<T>>();
             if (handler == null)
@@ -101,7 +95,7 @@ public class RegisterUserCommandMessage: CommandMessage
     }
 ```
 
-#### 
+
 
 #### [`UserCommandHandler:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Command/UserCommand/Handler/UserCommandHandler.cs) Implement handler to handle user command
 
@@ -160,11 +154,181 @@ public class UserService : IUserService
 
 
 
+## Implementation of Event Bus:
+
+#### [`IEventAggregator:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/EventBus/IEventAggregator.cs) Implementation of `IEventAggregator` Interfaces
+
+```
+public interface IEventAggregator
+    {
+        Task Publish<TEvent>(TEvent eventToPublish) where TEvent : IEvent;
+
+        void Subscribe<T,U>() 
+            where T : IEventHandler<U>
+            where U : IEvent;
+
+    }
+```
+
+
+
+#### [`EventAggregator:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/EventAggregator.cs) Implementation of `EventAggregator` to subscribe subscribers and publish event.
+
+```
+public class EventAggregator : IEventAggregator
+    {
+        private readonly IServicesProvider _provier;
+        private readonly List<Type> _subscribersType = new List<Type>();
+        public IEnumerable<Type> SubscriberTypes{get{return .AsReadOnly();}}
+
+        public EventAggregator(IServicesProvider provider)
+        {
+            _provier = provider ?? throw new ArgumentNullException(nameof(provider));
+        }
+
+        public void Subscribe<T, U>()
+            where T : IEventHandler<U>
+            where U : IEvent
+        {
+            _subscribersType.Add(typeof(IEventHandler<U>));
+        }
+
+        public async Task Publish<T>(T eventToPublish) where T : IEvent
+        {
+            if(eventToPublish == null)
+                throw new ArgumentNullException(nameof(eventToPublish));
+
+            var handlers = GetEventSubscribers(eventToPublish);
+            List<Task> actionToHandle = new List<Task>();
+            foreach (var handler in handlers)
+            {
+                var handlerService = _provier.GetService<IEventHandler<T>>();
+                if (handlerService == null)
+                    throw new ArgumentNullException($"{typeof(IEventHandler<T>)}");
+                    
+                actionToHandle.Add(handlerService.Handle(eventToPublish));
+            }
+
+            await Task.WhenAll(actionToHandle);
+        }
+
+        private List<Type> GetEventSubscribers<T>(T eventToPublish) where T : IEvent
+        {
+            return _subscribersType.Where(o => o == typeof(IEventHandler<T>)).ToList();
+        }
+    }
+```
+
+
+
+#### [`Event:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Event/Event.cs) The Implementation of `IEvent` interface and `Event` class
+
+```
+public interface IEvent{ }
+    
+public class Event : IEvent
+    {
+        public Guid Id { get; private set; }
+        public Event(Guid id)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentException(nameof(id));
+
+            Id = id;
+        }
+    }
+```
+
+
+
+#### [`UserCreatedEvent:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Event/Event.cs) Implementation of `UserCreatedEvent` class. This event is published when the user is created.
+
+```
+public class UserCreatedEvent : Event
+{
+    public UserCreatedEvent(Guid id) : base(id)
+    {
+    }
+}
+```
+
+
+
+####  [`UserCreatedEventHandler:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Event/Handler/UserCreatedEventHandler.cs)Implementation of `UserCreatedEventHandler` class to handle `UserCreatedEvent`. 
+
+
+```
+public class UserCreatedEventHandler : IEventHandler<UserCreatedEvent>
+    {
+        private readonly IEmailService _emailService;
+        public UserCreatedEventHandler(IEmailService emailService)
+        {
+            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
+        }
+
+        public async Task Handle(UserCreatedEvent eventToHandle)
+        {
+            //validate eventToHandle 
+            await _emailService.SendWelcomeMailTo(eventToHandle.Id);
+        }
+    }
+
+```
+
+
+
+#### [`UserCommandHandler:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Command/UserCommand/Handler/UserCommandHandler.cs) Change `UserCommandhandler` to publish `UserCreatedEvent` after user is created.
+
+```
+public UserCommandHandler(IUserRepository userRepository, IEventAggregator eventAggregator)
+{
+     _userRepository = userRepository;
+     _eventAggregator = eventAggregator;
+}
+
+public async Task HandelAsync(RegisterUserCommandMessage addUser)
+{
+     if (addUser is null)
+     {
+    	 throw new ArgumentNullException(nameof(addUser));
+     }
+     
+	var user = new UserDbModel
+	{
+        Id = addUser.Id,
+        FirstName = addUser.FirstName,
+        LastName = addUser.LastName,
+        Email = addUser.Email
+     };
+     await _userRepository.AddAsync(user);
+     
+     //Publish UserCreatedEvent after user is added
+     await _eventAggregator.Publish(new UserCreatedEvent(user.Id));
+}
+```
+
+
+
+####  [`ConfigurationExtension:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement.Host/Configuration/ConfigurationExtensions.cs) Implementation of static`ConfigurationExtension` class and implement `SubscribeEventHandler` method to register subscribers. 
+
+
+```
+private static void SubscribeEventHandler(IEventAggregator eventAggregator)
+{
+     eventAggregator.Subscribe<UserCreatedEventHandler, UserCreatedEvent>();
+} 
+
+
+```
+
+
+
+
+
 
 ## Roadmap
 
 - [x]  Implement Command Bus
-
-- [ ]  Implement Event Bus
+- [x]  Implement Event Bus
 - [ ]  Implement Query Bus
 
