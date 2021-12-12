@@ -221,7 +221,7 @@ public class EventAggregator : IEventAggregator
 
 
 
-#### [`Event:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Event/Event.cs) The Implementation of `IEvent` interface and `Event` class
+#### [`Event:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Event/UserCreatedEvent.cs) The Implementation of `IEvent` interface and `Event` class
 
 ```
 public interface IEvent{ }
@@ -288,18 +288,9 @@ public UserCommandHandler(IUserRepository userRepository, IEventAggregator event
 
 public async Task HandelAsync(RegisterUserCommandMessage addUser)
 {
-     if (addUser is null)
-     {
-    	 throw new ArgumentNullException(nameof(addUser));
-     }
-     
-	var user = new UserDbModel
-	{
-        Id = addUser.Id,
-        FirstName = addUser.FirstName,
-        LastName = addUser.LastName,
-        Email = addUser.Email
-     };
+     //Create user model
+     var user = new UserDbModel{...};
+	
      await _userRepository.AddAsync(user);
      
      //Publish UserCreatedEvent after user is added
