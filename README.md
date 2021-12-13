@@ -172,7 +172,7 @@ public interface IEventAggregator
 
 
 
-#### [`EventAggregator:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/EventAggregator.cs) Implementation of `EventAggregator` to subscribe subscribers and publish event.
+#### [`EventAggregator:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/EventAggregator.cs) Implementation of `EventAggregator` to subscribe eventhandlers and publish event.
 
 ```
 public class EventAggregator : IEventAggregator
