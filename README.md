@@ -277,7 +277,7 @@ public class UserCreatedEventHandler : IEventHandler<UserCreatedEvent>
 
 
 
-#### [`UserCommandHandler:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Command/UserCommand/Handler/UserCommandHandler.cs) Change `UserCommandhandler` to publish `UserCreatedEvent` after user is created.
+#### [`UserCommandHandler:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Command/UserCommand/Handler/UserCommandHandler.cs) Update `UserCommandhandler`'s HandleAsync method to publish `UserCreatedEvent` after user is created.
 
 ```
 public UserCommandHandler(IUserRepository userRepository, IEventAggregator eventAggregator)
