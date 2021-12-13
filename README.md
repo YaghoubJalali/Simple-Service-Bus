@@ -259,19 +259,19 @@ public class UserCreatedEvent : Event
 
 ```
 public class UserCreatedEventHandler : IEventHandler<UserCreatedEvent>
+{
+    private readonly IEmailService _emailService;
+    public UserCreatedEventHandler(IEmailService emailService)
     {
-        private readonly IEmailService _emailService;
-        public UserCreatedEventHandler(IEmailService emailService)
-        {
-            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
-        }
-
-        public async Task Handle(UserCreatedEvent eventToHandle)
-        {
-            //validate eventToHandle 
-            await _emailService.SendWelcomeMailTo(eventToHandle.Id);
-        }
+        _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
     }
+
+public async Task Handle(UserCreatedEvent eventToHandle)
+{
+        //validate eventToHandle 
+        await _emailService.SendWelcomeMailTo(eventToHandle.Id);
+    }
+}
 
 ```
 
