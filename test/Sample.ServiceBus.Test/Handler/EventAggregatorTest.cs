@@ -44,7 +44,7 @@ namespace Sample.ServiceBus.Test.Handler
         public void When_TryToPublishNullEvent_Then_ArgumentNullExceptionShouldBeThrown()
         {
             IEvent eventToPublish = null;
-            async Task act() => await _eventAggregatorFixture.EventAggregator.Publish(eventToPublish);
+            async Task act() => await _eventAggregatorFixture.EventAggregator.PublishAsync(eventToPublish);
 
             Assert.ThrowsAsync<ArgumentNullException>(act);
         }
@@ -57,7 +57,7 @@ namespace Sample.ServiceBus.Test.Handler
 
             var eventToPublish = new TestEvent(Guid.NewGuid());
 
-            async Task act() => await eventAggregator.Publish(eventToPublish);
+            async Task act() => await eventAggregator.PublishAsync(eventToPublish);
 
             Assert.ThrowsAsync<ArgumentNullException>(act);
         }
@@ -67,7 +67,7 @@ namespace Sample.ServiceBus.Test.Handler
         {
             var userGuid = Guid.NewGuid();
             var userCreatedEvent = new UserCreatedEvent(userGuid);
-            await _eventAggregatorFixture.EventAggregator.Publish(userCreatedEvent);
+            await _eventAggregatorFixture.EventAggregator.PublishAsync(userCreatedEvent);
             
             _eventAggregatorFixture.EmailService.Verify(m =>
                         m.SendWelcomeMailTo(userGuid)

@@ -20,7 +20,7 @@ namespace Sample.ServiceBus.Handler
             _actionEvent = actionEvent?? throw new ArgumentNullException(nameof(actionEvent));
         }
 
-        public async Task Handle(TEvent eventToHandle)
+        public async Task HandleAsync(TEvent eventToHandle)
         {
            await  _actionEvent(eventToHandle);
         }

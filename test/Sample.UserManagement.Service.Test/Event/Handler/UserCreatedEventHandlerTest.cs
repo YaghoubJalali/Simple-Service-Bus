@@ -26,7 +26,7 @@ namespace Sample.UserManagement.Service.Test.Event.Handler
         [Fact]
         public async Task When_CallHandleMethodWithNullEvent_Then_ArgumentNullExceptionShouldBeThrown()
         {
-            async Task act() => await _userCreatedEventHandlerFixture.MockUserCreatedEventHandler.Handle(null);
+            async Task act() => await _userCreatedEventHandlerFixture.MockUserCreatedEventHandler.HandleAsync(null);
             await Assert.ThrowsAsync<ArgumentNullException>(act);
         }
 
@@ -35,7 +35,7 @@ namespace Sample.UserManagement.Service.Test.Event.Handler
         {
             var eventToHandle = new UserCreatedEvent(Guid.NewGuid());
 
-            await _userCreatedEventHandlerFixture.MockUserCreatedEventHandler.Handle(eventToHandle);
+            await _userCreatedEventHandlerFixture.MockUserCreatedEventHandler.HandleAsync(eventToHandle);
             _userCreatedEventHandlerFixture.MockEmailService.Verify(m => m.SendWelcomeMailTo(eventToHandle.Id), Moq.Times.Once);
 
         }

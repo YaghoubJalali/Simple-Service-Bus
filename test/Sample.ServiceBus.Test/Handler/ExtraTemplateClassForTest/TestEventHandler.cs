@@ -8,7 +8,7 @@ namespace Sample.ServiceBus.Test.Handler.ExtraTemplateClassForTest
 {
     public class TestEventHandler : IEventHandler<TestEvent>
     {
-        public Task Handle(TestEvent eventToHandle)
+        public Task HandleAsync(TestEvent eventToHandle)
         {
             throw new NotImplementedException();
         }

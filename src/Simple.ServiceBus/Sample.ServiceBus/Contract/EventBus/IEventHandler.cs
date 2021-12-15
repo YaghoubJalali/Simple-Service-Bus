@@ -10,6 +10,6 @@ namespace Sample.ServiceBus.Contract
     public interface IEventHandler<TEvent> 
                   where TEvent: IEvent
     {
-        Task Handle(TEvent eventToHandle);
+        Task HandleAsync(TEvent eventToHandle);
     }
 }

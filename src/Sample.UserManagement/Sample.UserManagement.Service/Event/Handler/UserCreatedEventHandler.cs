@@ -15,7 +15,7 @@ namespace Sample.UserManagement.Service.Event.Handler
             _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
         }
 
-        public async Task Handle(UserCreatedEvent eventToHandle)
+        public async Task HandleAsync(UserCreatedEvent eventToHandle)
         {
             Validate(eventToHandle);
             await _emailService.SendWelcomeMailTo(eventToHandle.Id);

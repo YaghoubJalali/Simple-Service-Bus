@@ -62,7 +62,7 @@ namespace Sample.UserManagement.Service.Test.Command.UserCommand.Handler
             _userCommandHandlerFixture.MockUserRepository.Verify(m => m.AddAsync(user), Moq.Times.Once);
 
             _userCommandHandlerFixture.MockEventAggregator.Verify(
-                m => m.Publish(It.Is<UserCreatedEvent>(o=>o.Id.Equals(user.Id))), Moq.Times.Once);
+                m => m.PublishAsync(It.Is<UserCreatedEvent>(o=>o.Id.Equals(user.Id))), Moq.Times.Once);
         }
 
         [Fact]

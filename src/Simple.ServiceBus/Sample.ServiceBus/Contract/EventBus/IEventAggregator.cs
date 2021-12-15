@@ -8,7 +8,7 @@ namespace Sample.ServiceBus.Contract
 {
     public interface IEventAggregator
     {
-        Task Publish<TEvent>(TEvent eventToPublish) where TEvent : IEvent;
+        Task PublishAsync<TEvent>(TEvent eventToPublish) where TEvent : IEvent;
 
         void SubscribeEventHandler<T,U>() 
             where T : IEventHandler<U>

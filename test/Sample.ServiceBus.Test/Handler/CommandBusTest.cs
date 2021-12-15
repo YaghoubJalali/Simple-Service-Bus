@@ -55,7 +55,7 @@ namespace Sample.ServiceBus.Test.Handler
                         m.AddAsync(It.IsAny<UserDbModel>())
                         , Moq.Times.Once);
             _servicesProviderFixture.MockEventAggregator.Verify(m =>
-                        m.Publish<UserCreatedEvent>(It.IsAny<UserCreatedEvent>())
+                        m.PublishAsync<UserCreatedEvent>(It.IsAny<UserCreatedEvent>())
                         , Moq.Times.Once);
         }
 

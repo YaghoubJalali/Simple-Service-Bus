@@ -39,7 +39,7 @@ namespace Sample.ServiceBus.Handler
             _subscribersType.Add(typeof(ActionEventHandler<T>));
         }
 
-        public async Task Publish<T>(T eventToPublish) where T : IEvent
+        public async Task PublishAsync<T>(T eventToPublish) where T : IEvent
         {
             if(eventToPublish == null)
                 throw new ArgumentNullException(nameof(eventToPublish));
@@ -52,7 +52,7 @@ namespace Sample.ServiceBus.Handler
                 if (handlerService == null)
                     throw new ArgumentNullException($"{typeof(IEventHandler<T>)}");
 
-                actionToHandle.Add(handlerService.Handle(eventToPublish));
+                actionToHandle.Add(handlerService.HandleAsync(eventToPublish));
             }
 
             await Task.WhenAll(actionToHandle);

@@ -52,7 +52,7 @@ namespace Sample.ServiceBus.Test.Handler
                 });
 
             _actionEventHandlerFixture.EventAggregator.SubscribeActionHandler<TestEvent>();
-            await _actionEventHandlerFixture.EventAggregator.Publish(testEvent);
+            await _actionEventHandlerFixture.EventAggregator.PublishAsync(testEvent);
 
             Assert.True(actionMethodCalled);
         }

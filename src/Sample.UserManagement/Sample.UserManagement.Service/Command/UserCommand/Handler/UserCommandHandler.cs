@@ -39,7 +39,7 @@ namespace Sample.UserManagement.Service.Command.UserCommand
             await _userRepository.AddAsync(user);
 
             //Publish UserCreatedEvent after user is added
-            await _eventAggregator.Publish(new UserCreatedEvent(user.Id));
+            await _eventAggregator.PublishAsync(new UserCreatedEvent(user.Id));
         }
 
         public async Task HandelAsync(ModifyUserCommandMessage modifyUser)
