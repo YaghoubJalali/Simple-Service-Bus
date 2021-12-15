@@ -4,6 +4,7 @@ using Sample.ServiceBus.Contract.EventBus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,8 +13,8 @@ namespace Sample.ServiceBus.Handler
     public class EventAggregator : IEventAggregator
     {
         private readonly IServicesProvider _provier;
-        private readonly List<Type> _subscribersType = new List<Type>();
-        public IEnumerable<Type> SubscriberTypes
+        private static List<Type> _subscribersType = new List<Type>();
+        public static IEnumerable<Type> SubscriberTypes
         {
             get
             {
@@ -26,11 +27,16 @@ namespace Sample.ServiceBus.Handler
             _provier = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
-        public void Subscribe<T, U>()
+        public void SubscribeEventHandler<T, U>()
             where T : IEventHandler<U>
             where U : IEvent
         {
             _subscribersType.Add(typeof(IEventHandler<U>));
+        }
+
+        public void SubscribeActionHandler<T>() where T : IEvent
+        {
+            _subscribersType.Add(typeof(ActionEventHandler<T>));
         }
 
         public async Task Publish<T>(T eventToPublish) where T : IEvent
@@ -42,7 +48,7 @@ namespace Sample.ServiceBus.Handler
             List<Task> actionToHandle = new List<Task>();
             foreach (var handler in handlers)
             {
-                var handlerService = _provier.GetService<IEventHandler<T>>();
+                var handlerService = GetService<T>(handler);
                 if (handlerService == null)
                     throw new ArgumentNullException($"{typeof(IEventHandler<T>)}");
 
@@ -54,7 +60,22 @@ namespace Sample.ServiceBus.Handler
 
         private List<Type> GetEventSubscribers<T>(T eventToPublish) where T : IEvent
         {
-            return _subscribersType.Where(o => o == typeof(IEventHandler<T>)).ToList();
+            List<Type> types = new List<Type>();
+            var handlerTypes = _subscribersType.Where(o => o == typeof(IEventHandler<T>)).ToList();
+            types.AddRange(handlerTypes);
+
+            var actionHandlerTypes = _subscribersType.Where(o => o == typeof(ActionEventHandler<T>)).ToList();
+            types.AddRange(actionHandlerTypes);
+
+            return types;
+        }
+
+        private IEventHandler<T> GetService<T>(Type type) where T : IEvent
+        {
+            MethodInfo method = _provier.GetType().GetMethod("GetService");
+            var genericMethod = method.MakeGenericMethod(type);
+            var service = genericMethod.Invoke(_provier, null);
+            return service as IEventHandler<T>;
         }
     }
 }

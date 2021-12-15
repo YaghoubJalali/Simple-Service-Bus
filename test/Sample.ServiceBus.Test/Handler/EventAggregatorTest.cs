@@ -34,11 +34,9 @@ namespace Sample.ServiceBus.Test.Handler
         [Fact]
         public void When_SubscribeEventHandlerInEventAggregator_Then_TypeOfSubscriberShouldBeInsertInSubscribersTypeList()
         {
-            var eventAggregator = new EventAggregator(_eventAggregatorFixture.ServiceProvider);
-            eventAggregator.Subscribe<UserCreatedEventHandler, UserCreatedEvent>();
-            Assert.True(eventAggregator.SubscriberTypes.ToList().Count()>0);
+            Assert.True(EventAggregator.SubscriberTypes.ToList().Count()>0);
             
-            var subscriber = eventAggregator.SubscriberTypes.FirstOrDefault(o => o == typeof(IEventHandler<UserCreatedEvent>));
+            var subscriber = EventAggregator.SubscriberTypes.FirstOrDefault(o => o == typeof(IEventHandler<UserCreatedEvent>));
             Assert.NotNull(subscriber);
         }
 
@@ -55,9 +53,9 @@ namespace Sample.ServiceBus.Test.Handler
         public void When_TryToPublishEventThatHandlerDoesNotRegistered_Then_ArgumentNullExceptionShouldBeThrown()
         {
             var eventAggregator = new EventAggregator(_eventAggregatorFixture.ServiceProvider);
-            eventAggregator.Subscribe<InvalidTestEventHandler, InvalidEventForTest>();
+            eventAggregator.SubscribeEventHandler<TestEventHandler, TestEvent>();
 
-            var eventToPublish = new InvalidEventForTest(Guid.NewGuid());
+            var eventToPublish = new TestEvent(Guid.NewGuid());
 
             async Task act() => await eventAggregator.Publish(eventToPublish);
 

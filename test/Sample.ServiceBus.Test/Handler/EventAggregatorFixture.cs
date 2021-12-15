@@ -41,7 +41,7 @@ namespace Sample.ServiceBus.Test.Handler
 
         private void RegisterEventHandlers()
         {
-            EventAggregator.Subscribe<UserCreatedEventHandler, UserCreatedEvent>();
+            EventAggregator.SubscribeEventHandler<UserCreatedEventHandler, UserCreatedEvent>();
         }
 
     }

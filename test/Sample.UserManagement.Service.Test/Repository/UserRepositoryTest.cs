@@ -74,8 +74,6 @@ namespace Sample.UserManagement.Service.Test.Repository
             };
             
             
-            //_mockRepositoryFixture.MockDbContext.Setup(x => x.SaveChangesAsync(default))
-            //                    .Throws(new Exception("Any Exception!"));
 
             async Task act() => await _mockRepositoryFixture.UserRepository.AddAsync(validUser);
 

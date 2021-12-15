@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Sample.ServiceBus.Test.Handler.ExtraTemplateClassForTest
 {
-    public class InvalidEventForTest : ServiceBus.Event
+    public class TestEvent : ServiceBus.Event
     {
-        public InvalidEventForTest(Guid id) : base(id)
+        public TestEvent(Guid id) : base(id)
         {
         }
     }

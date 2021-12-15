@@ -37,6 +37,8 @@ namespace Sample.UserManagement.Configuration
             RegisterAllGenericeType(services, typeof(ICommandHandler<>), typeof(UserCommandHandler), ServiceLifetime.Scoped);
             RegisterAllGenericeType(services, typeof(IEventHandler<>), typeof(UserCreatedEventHandler), ServiceLifetime.Scoped);
 
+
+
             services.AddSingleton<ICommandBus, CommandBus>();
             services.AddSingleton<IEventAggregator, EventAggregator>();
 
@@ -86,7 +88,7 @@ namespace Sample.UserManagement.Configuration
 
         private static void SubscribeEventHandler(IEventAggregator eventAggregator)
         {
-            eventAggregator.Subscribe<UserCreatedEventHandler, UserCreatedEvent>();
+            eventAggregator.SubscribeEventHandler<UserCreatedEventHandler, UserCreatedEvent>();
         } 
 
     }

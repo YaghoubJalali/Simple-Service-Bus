@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Sample.ServiceBus.Test.Handler.ExtraTemplateClassForTest
 {
-    public class InvalidTestEventHandler : IEventHandler<InvalidEventForTest>
+    public class TestEventHandler : IEventHandler<TestEvent>
     {
-        public Task Handle(InvalidEventForTest eventToHandle)
+        public Task Handle(TestEvent eventToHandle)
         {
             throw new NotImplementedException();
         }
