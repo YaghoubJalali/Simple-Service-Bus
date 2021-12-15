@@ -163,7 +163,7 @@ public interface IEventAggregator
     {
         Task Publish<TEvent>(TEvent eventToPublish) where TEvent : IEvent;
 
-        void Subscribe<T,U>() 
+        void SubscribeEventHandler<T,U>() 
             where T : IEventHandler<U>
             where U : IEvent;
 
@@ -186,7 +186,7 @@ public class EventAggregator : IEventAggregator
             _provier = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
-        public void Subscribe<T, U>()
+        public void SubscribeEventHandler<T, U>()
             where T : IEventHandler<U>
             where U : IEvent
         {
@@ -306,7 +306,7 @@ public async Task HandelAsync(RegisterUserCommandMessage addUser)
 ```
 private static void SubscribeEventHandler(IEventAggregator eventAggregator)
 {
-     eventAggregator.Subscribe<UserCreatedEventHandler, UserCreatedEvent>();
+     eventAggregator.SubscribeEventHandler<UserCreatedEventHandler, UserCreatedEvent>();
 } 
 
 
