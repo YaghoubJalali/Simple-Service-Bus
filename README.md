@@ -384,29 +384,6 @@ public async Task HandelAsync(RegisterUserCommandMessage addUser)
 
 
 
-#### [`UserCommandHandler:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Command/UserCommand/Handler/UserCommandHandler.cs) Update `UserCommandhandler`'s HandleAsync method to publish `UserCreatedEvent` after user is created.
-
-```
-public UserCommandHandler(IUserRepository userRepository, IEventAggregator eventAggregator)
-{
-     _userRepository = userRepository;
-     _eventAggregator = eventAggregator;
-}
-
-public async Task HandelAsync(RegisterUserCommandMessage addUser)
-{
-     //Create user model
-     var user = new UserDbModel{...};
-	
-     await _userRepository.AddAsync(user);
-     
-     //Publish UserCreatedEvent after user is added
-     await _eventAggregator.Publish(new UserCreatedEvent(user.Id));
-}
-```
-
-
-
 
 
 ####  [`ConfigurationExtension:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement.Host/Configuration/ConfigurationExtensions.cs) Implementation of static`ConfigurationExtension` class and implement `SubscribeEventHandler` method to register subscribers. 
