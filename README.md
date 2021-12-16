@@ -11,8 +11,8 @@ Thank you.
 
 ## Purpose
 
-The intention of this project is to simple implement concepts of  `service bus`. In this service user is registered. The `UserRegisteredEvent` is then published by the user service and `UserEventHandler` handle the event. Finnaly a welcome message is sent to the user.I try to implement the project by testing.
-
+The intention of this project is to simple implement concepts of  `service bus`. In this service user is registered. The `UserRegisteredEvent` is then published by the user service and `UserEventHandler` handle the event. Finnaly a welcome message is sent to the user.I use EntityFrameworkCore.InMemory. and try to implement the project by testing.
+So, you can easily download and test it.
 
 
 ## Used Framework and libraries
