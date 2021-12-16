@@ -39,7 +39,7 @@ The intention of this project is to implement concepts of different kinds of `se
 
 - [`Event`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Event/Event.cs) - A type of `event` that would be handled
 - [`IEventHandler<>`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/EventBus/IEventHandler.cs) - The Interface must be implemented to handle `Event`. Provides `HandleAsync(EventToHandle)` Method.
-- [`ActionEventHandler<TEvent>`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/ActionEventHandler.cs) - The class must be implemented to add custom action to specific `Event` and handle it.
+- [`ActionEventHandler<TEvent>`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/ActionEventHandler.cs) - The class must be implemented to handle `Event` with specific action.
 - [`EventAggregator`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/EventAggregator.cs) - Subscribe `EventHandler` and `ActionHandler` for `Event`.
 
 
@@ -257,7 +257,7 @@ public class EventAggregator : IEventAggregator
 
 
 
-#### [`ActionEventHandler:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/ActionEventHandler.cs) The Implementation of `ActionEventHandler` class to add custom action to specific `Event` and handle it
+#### [`ActionEventHandler:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/ActionEventHandler.cs) The Implementation of `ActionEventHandler` class to handle `Event` with specific action
 
 ```
 public class ActionEventHandler<TEvent> : IEventHandler<TEvent>
