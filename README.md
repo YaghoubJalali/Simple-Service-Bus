@@ -1,5 +1,5 @@
 ## Simple Service-Bus
-Implement service bus to handle commands and events.To read more about CQRS + ES one fo the good recommendation click [`here`](https://cqrs.nu/Faq) 
+Implement service bus to handle commands and events.To read more about CQRS + ES click [`here`](https://cqrs.nu/Faq) 
 
 
 ## Give a Star! ⭐
