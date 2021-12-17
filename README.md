@@ -1,5 +1,5 @@
 ## Simple Service-Bus
-Implement service bus to handle commands and events.
+Implement service bus to handle commands and events.To read more about CQRS + ES one fo the good recommendation click [`here`](https://cqrs.nu/Faq) 
 
 
 ## Give a Star! ⭐
@@ -12,7 +12,7 @@ Thank you.
 ## Purpose
 
 The intention of this project is to simple implement concepts of  `service bus`. In this service user is registered. The `UserRegisteredEvent` is then published by the user service and `UserEventHandler` handle the event. Finnaly a welcome message is sent to the user.I use EntityFrameworkCore.InMemory. and try to implement the project by testing.
-So, you can easily download and test it.
+So, you can easily download and test it. 
 
 
 ## Used Framework and libraries
