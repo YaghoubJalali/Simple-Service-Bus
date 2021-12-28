@@ -30,7 +30,7 @@ So, you can easily download and test it.
 **Command-Bus**
 
 - [`CommandMessage`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Command/CommandMessage.cs) - A type of `command` that would be handled
-- [`ICommandHandler<>`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/CommandBus/ICommandHandler.cs) - The Interface must be implemented to handle each `Command`. Provides `HandleAsync(CommandMessageImplementation)` Method.
+- [`ICommandHandler<>`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/CommandBus/ICommandHandler.cs) - The Interface must be implemented to handle each `Command`. Provides `HandleAsync(CommandMessageImplementation)` method.
 - [`CommandBus`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/CommandBus.cs) - Dispatch related `CommandHandler` for each `Command`.
 
 
@@ -38,11 +38,21 @@ So, you can easily download and test it.
 **Event-Bus**
 
 - [`Event`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Event/Event.cs) - A type of `event` that would be handled
-- [`IEventHandler<>`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/EventBus/IEventHandler.cs) - The Interface must be implemented to handle `Event`. Provides `HandleAsync(EventToHandle)` Method.
+- [`IEventHandler<>`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/EventBus/IEventHandler.cs) - The Interface must be implemented to handle `Event`. Provides `HandleAsync(EventToHandle)` method.
 - [`ActionEventHandler<TEvent>`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/ActionEventHandler.cs) - The class must be implemented to handle `Event` with specific action.
 - [`EventAggregator`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/EventAggregator.cs) - Subscribe `EventHandler` and `ActionHandler` for `Event`.
 
 
+
+**Query-Bus**
+
+- [`IQuery`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/QueryBus/IQuery.cs) - The Interface containing the filter parameters must be implemented
+
+- [`IQueryHandler<>`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/QueryBus/IQueryHandler.cs) - The Interface must be implemented to handle each `Query`. Provides `GetQueryAsync(TQueryParameter query)` method.
+
+- [`QueryDispatcher`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/QueryDispatcher.cs) - Dispatch related `QueryHandler` for each query.
+
+  
 
 ## Implementation of Command Bus
 
