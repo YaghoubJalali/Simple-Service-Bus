@@ -1,5 +1,6 @@
 ﻿using Moq;
 using Sample.ServiceBus.Contract;
+using Sample.ServiceBus.Contract.QueryBus;
 using Sample.UserManagement.Service.Repository;
 using Sample.UserManagement.Service.Repository.Contract;
 using Sample.UserManagement.Service.Service;
@@ -14,7 +15,7 @@ namespace Sample.UserManagement.Service.Test.Service
     {
         public IUserService UserService { get; private set; }
         public Mock<ICommandBus> MockCommandBus { get; private set; }
-        public Mock<IUserRepository> MockUserRepository { get; private set; }
+        public Mock<IQueryDispatcher> MockQueryDispatcher { get; private set; }
         public UserServiceFixture()
         {
             InitiateService();
@@ -23,8 +24,8 @@ namespace Sample.UserManagement.Service.Test.Service
         private void InitiateService()
         {
             MockCommandBus = new Mock<ICommandBus>();
-            MockUserRepository = new Mock<IUserRepository>();
-            UserService = new UserService(MockCommandBus.Object,MockUserRepository.Object);
+            MockQueryDispatcher = new Mock<IQueryDispatcher>();
+            UserService = new UserService(MockCommandBus.Object, MockQueryDispatcher.Object);
         }
 
         

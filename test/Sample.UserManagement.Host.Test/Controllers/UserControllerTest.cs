@@ -188,17 +188,17 @@ namespace Sample.UserManagement.Host.Test.Controllers
         }
 
         [Fact]
-        public void When_GetUsersMethodCalled_Then_ResultShouldBeListOfUsers()
+        public async Task When_GetUsersMethodCalled_Then_ResultShouldBeListOfUsers()
         {
-            var users = _userController.GetUsers();
+            var users = await _userController.GetUsers();
             Assert.NotNull(users);
             Assert.IsType<List<User>>(users);
         }
 
         [Fact]
-        public void When_GetUsersMethodCalled_Then_GetAllUerFromUserServiceShouldBeCalled()
+        public async Task When_GetUsersMethodCalled_Then_GetAllUerFromUserServiceShouldBeCalled()
         {
-            _mockUserController.GetUsers();
+            await _mockUserController.GetUsers();
             _userControllerFixture.MockUserService.Verify(m => m.GetAllUser(), Moq.Times.Once);
         }
 

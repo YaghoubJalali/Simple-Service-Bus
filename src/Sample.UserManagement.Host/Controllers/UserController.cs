@@ -63,17 +63,22 @@ namespace Sample.UserManagement.Controllers
         }
 
         /// <summary>
-        /// Get All Users 
+        /// Get All Users For Test
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
         /// <returns></returns>
-        [HttpGet("for-test")]
-        public IEnumerable<User> GetUsers()
+        [HttpGet]
+        public async Task<IEnumerable<User>> GetUsers()
         {
-            var users = _userService.GetAllUser();
+            var users = await _userService.GetAllUser();
             return users;
         }
 
+
+        [HttpGet("{userId}")]
+        public async Task<User> GetUsers(Guid userId)
+        {
+            var user = await _userService.GetUserAsync(userId);
+            return user;
+        }
     }
 }

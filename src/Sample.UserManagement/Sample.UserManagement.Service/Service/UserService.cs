@@ -9,6 +9,8 @@ using System.Linq;
 using Sample.UserManagement.Service.DatabaseModel;
 using Sample.UserManagement.Service.Service.Contract;
 using Sample.UserManagement.Service.Repository.Contract;
+using Sample.UserManagement.Service.Common;
+using Sample.ServiceBus.Contract.QueryBus;
 
 namespace Sample.UserManagement.Service.Service
 {
@@ -16,12 +18,12 @@ namespace Sample.UserManagement.Service.Service
     {
         private readonly ICommandBus _commandBus;
 
-        private IUserRepository _userRepository { get; }
+        private IQueryDispatcher _queryDispatcher { get; }
 
-        public UserService(ICommandBus commandBus,IUserRepository userRepository)
+        public UserService(ICommandBus commandBus, IQueryDispatcher queryDispatcher)
         {
             _commandBus = commandBus ?? throw new ArgumentNullException($"{nameof(ICommandBus)} should not be null!");
-            _userRepository = userRepository ?? throw new ArgumentNullException($"{nameof(IUserRepository)} should not be null!");
+            _queryDispatcher = queryDispatcher ?? throw new ArgumentNullException(nameof(queryDispatcher));
         }
 
         public async Task<Guid> RegisterUser(RegisterUser addUser)
@@ -32,7 +34,7 @@ namespace Sample.UserManagement.Service.Service
             }
 
             var addUserCommand = new RegisterUserCommandMessage(addUser.FirstName, addUser.LastName, addUser.Email);
-            await _commandBus.Dispatch(addUserCommand);
+            await _commandBus.DispatchAsync(addUserCommand);
             return addUserCommand.Id;
         }
 
@@ -48,33 +50,28 @@ namespace Sample.UserManagement.Service.Service
 
             var modifyUserCommand = new ModifyUserCommandMessage
                 (userGuid, modifyUser.FirstName, modifyUser.LastName, modifyUser.Email);
-            await _commandBus.Dispatch(modifyUserCommand);
+            await _commandBus.DispatchAsync(modifyUserCommand);
         }
 
-        public IEnumerable<User> GetAllUser()
+        public async Task<IEnumerable<User>> GetAllUser()
         {
-            var tempUsers = _userRepository.GetAll().ToList();
-            var users = tempUsers.ConvertAll(o => ConvertUserDbModelToUser(o)).ToList();
-            return users;
+            //add extra filter later
+            GetUsersQuery usersFilter=new GetUsersQuery();
+            var tempUsers = await _queryDispatcher.DispatchAsync<GetUsersQuery,GetUsersQueryResult>(usersFilter);
+            return tempUsers?.Users??new List<User>();
         }
 
-        private User ConvertUserDbModelToUser(UserDbModel model)
-        {
-            if (model == null)
-                return null;
-
-            return new User(model.Id,model.FirstName,model.LastName,model.Email);
-        }
+        
 
         public async Task<User> GetUserAsync(Guid userId)
         {
             if (userId == Guid.Empty)
                 throw new ArgumentException(nameof(userId));
 
-            var dbUser =await _userRepository.GetUserAsync(userId);
-            var user = ConvertUserDbModelToUser(dbUser);
+            GetUserQuery userFilter = new GetUserQuery { UserId = userId };
+            var tempUsers = await _queryDispatcher.DispatchAsync<GetUserQuery, GetUserQueryResult>(userFilter);
 
-            return user;
+            return tempUsers?.User;
         }
     }
 }

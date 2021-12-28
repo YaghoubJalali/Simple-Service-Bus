@@ -7,6 +7,6 @@ namespace Sample.ServiceBus.Contract
 {
     public interface ICommandBus
     {
-        Task Dispatch<T>(T command) where T : class, ICommandMessage;
+        Task DispatchAsync<T>(T command) where T : class, ICommandMessage;
     }
 }

@@ -10,7 +10,7 @@ namespace Sample.UserManagement.Service.Service.Contract
     {
         Task<Guid> RegisterUser(RegisterUser addUser);
         Task ModifyUser(Guid userGuid, ModifyUser modifyUser);
-        IEnumerable<User> GetAllUser();
+        Task<IEnumerable<User>> GetAllUser();
         Task<User> GetUserAsync(Guid userId);
     }
 }

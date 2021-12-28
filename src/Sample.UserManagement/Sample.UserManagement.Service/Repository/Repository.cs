@@ -31,7 +31,6 @@ namespace Sample.UserManagement.Service.Repository
             try
             {
                 await _entities.AddAsync(entity);
-                //await _userManagementContext.AddAsync(entity);
                 await _userManagementContext.SaveChangesAsync();
                 _userManagementContext.Entry(entity).State = EntityState.Detached;
 
@@ -54,7 +53,6 @@ namespace Sample.UserManagement.Service.Repository
             {
                 _entities.Update(entity);
 
-                //_userManagementContext.Update(entity);
                 await _userManagementContext.SaveChangesAsync();
                 _userManagementContext.Entry(entity).State = EntityState.Detached;
 
@@ -82,7 +80,7 @@ namespace Sample.UserManagement.Service.Repository
 
         public virtual IQueryable<TEntity> GetAll()
         {
-            return _entities;
+            return _entities.AsNoTracking().AsNoTrackingWithIdentityResolution();
         }
 
         public bool Disposed

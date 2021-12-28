@@ -17,7 +17,7 @@ namespace Sample.ServiceBus.Handler
             _provier = provider ?? throw new ArgumentNullException($"{nameof(IServicesProvider)} is null!");
         }
 
-        public async Task Dispatch<T>(T command) where T : class, ICommandMessage
+        public async Task DispatchAsync<T>(T command) where T : class, ICommandMessage
         {
             if (command is null)
             {

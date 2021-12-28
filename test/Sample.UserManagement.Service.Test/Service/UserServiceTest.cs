@@ -1,5 +1,6 @@
 ﻿using Moq;
 using Sample.ServiceBus.Contract;
+using Sample.ServiceBus.Contract.QueryBus;
 using Sample.ServiceBus.Handler;
 using Sample.UserManagement.Service.Command.UserCommand;
 using Sample.UserManagement.Service.Model;
@@ -31,8 +32,8 @@ namespace Sample.UserManagement.Service.Test.Service
        [Fact]
         public void When_TryToInstanciateUserServiceClassWithNullCommandBusParameter_Then_ArgumentNullExceptionShouldBeThrown()
         {
-            var userRepository = new Mock<IUserRepository>().Object;
-            Assert.Throws<ArgumentNullException>(() => new UserService(null, userRepository));
+            var queryDispatcher = new Mock<IQueryDispatcher>().Object;
+            Assert.Throws<ArgumentNullException>(() => new UserService(null, queryDispatcher));
         }
 
         [Fact]
@@ -57,7 +58,7 @@ namespace Sample.UserManagement.Service.Test.Service
             await _userService.RegisterUser(registerUser);
 
             _mockCommandBus.Verify(m =>
-                        m.Dispatch(It.IsAny<RegisterUserCommandMessage>())
+                        m.DispatchAsync(It.IsAny<RegisterUserCommandMessage>())
                         , Moq.Times.Once);
         }
 
@@ -84,25 +85,15 @@ namespace Sample.UserManagement.Service.Test.Service
             await _userService.ModifyUser(Guid.NewGuid(), modifyUser);
 
             _mockCommandBus.Verify(m =>
-                        m.Dispatch(It.IsAny<ModifyUserCommandMessage>())
+                        m.DispatchAsync(It.IsAny<ModifyUserCommandMessage>())
                         , Moq.Times.Once);
         }
 
 
         [Fact]
-        public void When_CallGetAllUser_Then_GetAllMethodFromUserRepositorySHouldBeCalled()
+        public async Task When_CallGetAllUser_Then_ValidListOfUserSHouldBeReturned()
         {
-            _userService.GetAllUser();
-
-            _userServiceFixture.MockUserRepository.Verify(m =>
-                        m.GetAll()
-                        , Moq.Times.Once);
-        }
-
-        [Fact]
-        public void When_CallGetAllUser_Then_ValidListOfUserSHouldBeReturned()
-        {
-            var users = _userService.GetAllUser();
+            var users = await _userService.GetAllUser();
 
             Assert.NotNull(users);
             Assert.IsType<List<User>>(users);
@@ -122,13 +113,23 @@ namespace Sample.UserManagement.Service.Test.Service
             Assert.Null(user);
         }
 
+
+        [Fact]
+        public void When_CallGetAllUser_Then_GetAllMethodFromUserRepositorySHouldBeCalled()
+        {
+            _userService.GetAllUser();
+            _userServiceFixture.MockQueryDispatcher.Verify(m =>
+                        m.DispatchAsync<GetUsersQuery, GetUsersQueryResult>(It.IsAny<GetUsersQuery>())
+                        , Moq.Times.Once);
+        }
+
         [Fact]
         public async Task When_GetUserAsyncMethodWithValidParameterCalled_Then_GetUserAsyncMethodFromUserRepositoryShouldBeCalled()
         {
             await _userService.GetUserAsync(Guid.NewGuid());
-            _userServiceFixture.MockUserRepository.Verify(m =>
-                        m.GetUserAsync(It.IsAny<Guid>())
-                        , Moq.Times.Once);
+            _userServiceFixture.MockQueryDispatcher.Verify(m =>
+                         m.DispatchAsync<GetUserQuery, GetUserQueryResult>(It.IsAny<GetUserQuery>())
+                         , Moq.Times.Once);
         }
     }
 }

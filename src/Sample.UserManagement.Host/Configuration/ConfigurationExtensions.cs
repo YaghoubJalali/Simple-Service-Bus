@@ -17,6 +17,9 @@ using Sample.UserManagement.Service.Service.Contract;
 using Sample.UserManagement.Service.Repository.Contract;
 using Sample.UserManagement.Service.Event.Handler;
 using Sample.UserManagement.Service.Event;
+using Sample.ServiceBus.Contract.QueryBus;
+using Sample.UserManagement.Service.Model;
+using Sample.UserManagement.Service.Query;
 
 namespace Sample.UserManagement.Configuration
 {
@@ -41,6 +44,12 @@ namespace Sample.UserManagement.Configuration
 
             services.AddSingleton<ICommandBus, CommandBus>();
             services.AddSingleton<IEventAggregator, EventAggregator>();
+
+
+            services.AddSingleton<IQueryDispatcher, QueryDispatcher>();
+            services.AddScoped<IQueryHandler<GetUserQuery,GetUserQueryResult>, UserQueryHandler>();
+            services.AddScoped<IQueryHandler<GetUsersQuery, GetUsersQueryResult>, UserQueryHandler>();
+
 
             services.AddSingleton(services);
 
