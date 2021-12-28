@@ -71,7 +71,7 @@ public class CommandBus : ICommandBus
             _provier = provider ?? throw new ArgumentNullException($"{nameof(IServicesProvider)} is null!");
         }
 
-        public async Task Dispatch<T>(T command) where T : class, ICommandMessage
+        public async Task DispatchAsync<T>(T command) where T : class, ICommandMessage
         {
            //Validate command
 
@@ -155,7 +155,7 @@ public class UserService : IUserService
         public async Task<Guid> RegisterUser(RegisterUser addUser)
         {
             var addUserCommand = new RegisterUserCommandMessage(addUser.FirstName, addUser.LastName, addUser.Email);
-            await _commandBus.Dispatch(addUserCommand);
+            await _commandBus.DispatchAsync(addUserCommand);
             return addUserCommand.Id;
         }
     }
