@@ -417,5 +417,5 @@ private static void SubscribeEventHandler(IEventAggregator eventAggregator)
 
 - [x]  Implement Command Bus
 - [x]  Implement Event Bus
-- [ ]  Implement Query Bus
+- [x]  Implement Query Bus
 
