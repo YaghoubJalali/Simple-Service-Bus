@@ -46,7 +46,9 @@ So, you can easily download and test it.
 
 **Query-Bus**
 
-- [`IQuery`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/QueryBus/IQuery.cs) - The Interface containing the filter parameters must be implemented
+- [`IQuery`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/QueryBus/IQuery.cs) - The Interface containing the filter parameters to apply them on `Query` must be implemented
+
+- [`IResult`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/QueryBus/IResult.cs) - Type of query result
 
 - [`IQueryHandler<>`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Contract/QueryBus/IQueryHandler.cs) - The Interface must be implemented to handle each `Query`. Provides `GetQueryAsync(TQueryParameter query)` method.
 
@@ -394,8 +396,6 @@ public async Task HandelAsync(RegisterUserCommandMessage addUser)
 
 
 
-
-
 ####  [`ConfigurationExtension:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement.Host/Configuration/ConfigurationExtensions.cs) Implementation of static`ConfigurationExtension` class and implement `SubscribeEventHandler` method to register subscribers. 
 
 
@@ -404,11 +404,151 @@ private static void SubscribeEventHandler(IEventAggregator eventAggregator)
 {
      eventAggregator.SubscribeEventHandler<UserCreatedEventHandler, UserCreatedEvent>();
 } 
+```
 
+
+
+## Implementation of Query Bus
+
+#### [`GetUserQuery:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Model/GetUserQuery.cs) Implementation of `IQuery` Interfaces containing user filters to apply to user query. 
+
+```
+public interface IQuery
+{
+}
+
+public class GetUserQuery : IQuery
+{
+     public Guid UserId { get; set; }
+}
 
 ```
 
 
+
+#### [`GetUserQueryResult:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Model/GetUserQueryResult.cs) Implementation of `IResult` Interfaces containing result model properties. 
+
+```
+public interface IResult
+{
+}
+
+public class GetUserQueryResult : IResult
+{
+    public User  User { get; set; }
+}
+
+```
+
+
+
+####  [`UserQueryHandler:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Query/UserQueryHandler.cs) Implementation of `IQueryHandler` interface for user query handler. Each query handler must be implement it to handle query filters and return responses.
+
+
+```
+public interface IQueryHandler<in TQueryParameter, TResult>
+              where TResult : IResult where TQueryParameter : IQuery
+{
+      Task<TResult> GetQueryAsync(TQueryParameter query);
+}
+    
+    
+public class UserQueryHandler : IQueryHandler<GetUserQuery, GetUserQueryResult>
+                                , IQueryHandler<GetUsersQuery, GetUsersQueryResult>
+    {
+        ...
+
+        public async Task<GetUsersQueryResult> GetQueryAsync(GetUsersQuery query)
+        {
+            ...
+        }
+
+        public async Task<GetUserQueryResult> GetQueryAsync(GetUserQuery query)
+        {
+            if (query == null || query.UserId == Guid.Empty)
+                throw new ArgumentException(nameof(query));
+
+            var dbUser = await _userRepository.GetUserAsync(query.UserId);
+            var user = Convertor.ConvertUserDbModelToUser(dbUser);
+
+            return new GetUserQueryResult {  User = user };
+
+        }
+
+        private async Task<User> GetUserAsync(Guid userId)
+        {
+            if (userId == Guid.Empty)
+                throw new ArgumentException(nameof(userId));
+
+            var dbUser = await _userRepository.GetUserAsync(userId);
+            var user = Convertor.ConvertUserDbModelToUser(dbUser);
+
+            return user;
+        }
+    }
+```
+
+
+
+#### [`QueryDispatcher:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/QueryDispatcher.cs) Implementation of `QueryDispatcher`.  each method must be call `DispatchAsync` method of `QueryDispatcher` class to dispatch `Query` and get answer. `QueryDispatcher` finds the right handler and sends the query.
+
+```
+public interface IQueryDispatcher
+{
+     Task<TResult> DispatchAsync<TQueryParameter, TResult>(TQueryParameter query) 
+         where TQueryParameter : IQuery
+         where TResult : IResult;
+}
+    
+public class QueryDispatcher : IQueryDispatcher
+    {
+        private readonly IServicesProvider _provier;
+
+        public QueryDispatcher(IServicesProvider provider)
+        {
+            _provier = provider ?? throw new ArgumentNullException($"{nameof(IServicesProvider)} is null!");
+        }
+
+        public async Task<TResult> DispatchAsync<TQueryParameter, TResult>(TQueryParameter query)
+            where TQueryParameter : IQuery
+            where TResult : IResult
+        {
+            if (query is null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+
+            var handler = _provier.GetService<IQueryHandler<TQueryParameter, TResult>>();
+            if (handler == null)
+                throw new ArgumentNullException(nameof(IQueryHandler<TQueryParameter, TResult>));
+
+            return await handler.GetQueryAsync(query);
+        }
+    }
+```
+
+
+
+#### [`Dispatcher sample:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Service/UserService.cs) sample use of dispatch method. 
+
+```
+public class UserService : IUserService
+{
+	...
+	
+  public async Task<User> GetUserAsync(Guid userId)
+  {
+       if (userId == Guid.Empty)
+               throw new ArgumentException(nameof(userId));
+
+        GetUserQuery userFilter = new GetUserQuery { UserId = userId };
+        var tempUsers = await _queryDispatcher.DispatchAsync<GetUserQuery, GetUserQueryResult>(userFilter);
+
+        return tempUsers?.User;
+   }
+}
+
+```
 
 
 
