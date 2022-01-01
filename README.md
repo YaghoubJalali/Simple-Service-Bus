@@ -425,7 +425,6 @@ public class GetUserQuery : IQuery
 ```
 
 
-
 #### [`GetUserQueryResult:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Model/GetUserQueryResult.cs) Implementation of `IResult` Interfaces containing result model properties. 
 
 ```
@@ -439,7 +438,6 @@ public class GetUserQueryResult : IResult
 }
 
 ```
-
 
 
 ####  [`UserQueryHandler:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Query/UserQueryHandler.cs) Implementation of `IQueryHandler` interface for user query handler. Each query handler must be implement it to handle query filters and return responses.
@@ -489,7 +487,6 @@ public class UserQueryHandler : IQueryHandler<GetUserQuery, GetUserQueryResult>
 ```
 
 
-
 #### [`QueryDispatcher:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/QueryDispatcher.cs) Implementation of `QueryDispatcher`.  each method must be call `DispatchAsync` method of `QueryDispatcher` class to dispatch `Query` and get answer. `QueryDispatcher` finds the right handler and sends the query.
 
 ```
@@ -528,7 +525,6 @@ public class QueryDispatcher : IQueryDispatcher
 ```
 
 
-
 #### [`Dispatcher sample:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Service/UserService.cs) sample use of dispatch method. 
 
 ```
@@ -549,8 +545,6 @@ public class UserService : IUserService
 }
 
 ```
-
-
 
 
 ## Roadmap
