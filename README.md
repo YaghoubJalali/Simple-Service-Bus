@@ -69,8 +69,6 @@ So, you can easily download and test it.
     }
 ```
 
-
-
 #### [`CommandBus:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/CommandBus.cs) Implementation of `CommandBus` 
 
 ```
@@ -96,8 +94,6 @@ public class CommandBus : ICommandBus
     }
 ```
 
-
-
 #### [`RegisterUserCommandMessage:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Command/UserCommand/RegisterUserCommandMessage.cs) Implement User Message to be handled 
 
 ```
@@ -115,8 +111,6 @@ public class RegisterUserCommandMessage: CommandMessage
         public string Email { get; private set; }
     }
 ```
-
-
 
 #### [`UserCommandHandler:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Command/UserCommand/Handler/UserCommandHandler.cs) Implement handler to handle user command
 
@@ -193,7 +187,6 @@ public interface IEventAggregator
 ```
 
 
-
 #### [`EventAggregator:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/EventAggregator.cs) Implementation of `EventAggregator` to subscribe eventhandlers and publish event.
 
 ```
@@ -267,8 +260,6 @@ public class EventAggregator : IEventAggregator
     }
 ```
 
-
-
 #### [`ActionEventHandler:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/ActionEventHandler.cs) The Implementation of `ActionEventHandler` class to handle `Event` with specific action
 
 ```
@@ -287,8 +278,6 @@ public class ActionEventHandler<TEvent> : IEventHandler<TEvent>
         }
     }
 ```
-
-
 
 #### [`ActionEventHandlerTest:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/test/Sample.ServiceBus.Test/Handler/ActionEventHandlerTest.cs) The Implementation of `ActionEventHandlerTest` is to show how to implement and use `ActionEventHandler` class with test
 
@@ -315,8 +304,6 @@ public async Task When_InstanciateActionEventHandlerWithAnActionAndPublishEvent_
 }
 ```
 
-
-
 #### [`Event:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Event/UserCreatedEvent.cs) The Implementation of `IEvent` interface and `Event` class
 
 ```
@@ -335,8 +322,6 @@ public class Event : IEvent
     }
 ```
 
-
-
 #### [`UserCreatedEvent:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Event/Event.cs) Implementation of `UserCreatedEvent` class. This event is published when the user is created.
 
 ```
@@ -347,8 +332,6 @@ public class UserCreatedEvent : Event
     }
 }
 ```
-
-
 
 ####  [`UserCreatedEventHandler:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Event/Handler/UserCreatedEventHandler.cs)Implementation of `UserCreatedEventHandler` class to handle `UserCreatedEvent`. 
 
@@ -371,8 +354,6 @@ public class UserCreatedEventHandler : IEventHandler<UserCreatedEvent>
 
 ```
 
-
-
 #### [`UserCommandHandler:`](https://github.com/YaghoubJalali/SimpleCommandBus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Command/UserCommand/Handler/UserCommandHandler.cs) Update `UserCommandhandler`'s HandleAsync method to publish `UserCreatedEvent` after user is created.
 
 ```
@@ -394,8 +375,6 @@ public async Task HandelAsync(RegisterUserCommandMessage addUser)
 }
 ```
 
-
-
 ####  [`ConfigurationExtension:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement.Host/Configuration/ConfigurationExtensions.cs) Implementation of static`ConfigurationExtension` class and implement `SubscribeEventHandler` method to register subscribers. 
 
 
@@ -405,8 +384,6 @@ private static void SubscribeEventHandler(IEventAggregator eventAggregator)
      eventAggregator.SubscribeEventHandler<UserCreatedEventHandler, UserCreatedEvent>();
 } 
 ```
-
-
 
 ## Implementation of Query Bus
 
@@ -425,7 +402,6 @@ public class GetUserQuery : IQuery
 ```
 
 
-
 #### [`GetUserQueryResult:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Model/GetUserQueryResult.cs) Implementation of `IResult` Interfaces containing result model properties. 
 
 ```
@@ -439,8 +415,6 @@ public class GetUserQueryResult : IResult
 }
 
 ```
-
-
 
 ####  [`UserQueryHandler:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Query/UserQueryHandler.cs) Implementation of `IQueryHandler` interface for user query handler. Each query handler must be implement it to handle query filters and return responses.
 
@@ -488,8 +462,6 @@ public class UserQueryHandler : IQueryHandler<GetUserQuery, GetUserQueryResult>
     }
 ```
 
-
-
 #### [`QueryDispatcher:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Simple.ServiceBus/Sample.ServiceBus/Handler/QueryDispatcher.cs) Implementation of `QueryDispatcher`.  each method must be call `DispatchAsync` method of `QueryDispatcher` class to dispatch `Query` and get answer. `QueryDispatcher` finds the right handler and sends the query.
 
 ```
@@ -527,8 +499,6 @@ public class QueryDispatcher : IQueryDispatcher
     }
 ```
 
-
-
 #### [`Dispatcher sample:`](https://github.com/YaghoubJalali/Simple-Service-Bus/blob/main/src/Sample.UserManagement/Sample.UserManagement.Service/Service/UserService.cs) sample use of dispatch method. 
 
 ```
@@ -549,8 +519,6 @@ public class UserService : IUserService
 }
 
 ```
-
-
 
 
 ## Roadmap
