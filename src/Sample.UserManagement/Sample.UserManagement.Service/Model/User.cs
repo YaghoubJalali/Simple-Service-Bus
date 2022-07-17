@@ -6,10 +6,10 @@ namespace Sample.UserManagement.Service.Model
 {
     public class User
     {
-        public Guid UserGuid { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
+        public Guid UserGuid { get; private set; }
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
+        public string Email { get; private set; }
         public User(Guid userGuid, string firstName, string lastName, string email)
         {
             UserGuid = userGuid;
